@@ -33,10 +33,10 @@ namespace SklepInternetowy.Models
         public string Email { get; set; }
         public string Komentarz { get; set; }
         public DateTime DataDodania { get; set; }
-        public StanZamowienia StanZamownienia { get; set; }
-        public decimal WartoscZamownienia { get; set; }
+        public StanZamowienia StanZamowienia { get; set; }
+        public decimal WartoscZamowienia { get; set; }
 
-        List<PozycjeZamownienia> PozycjeZamowienia { get; set; }
+        List<PozycjaZamowienia> PozycjeZamowienia { get; set; }
     }
 
     public enum StanZamowienia

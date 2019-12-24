@@ -1,8 +1,10 @@
-﻿namespace SklepInternetowy.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SklepInternetowy.Models
 {
-    public class PozycjeZamownienia
+    public class PozycjaZamowienia
     {
-        public int PozycjaZamowniemiaId { get; set; }
+        public int PozycjaZamowieniaId { get; set; }
         public int ZamowienieID { get; set; }
         public int KursId { get; set; }
         public int Ilosc { get; set; }
