@@ -19,5 +19,11 @@ namespace SklepInternetowy.Controllers
 
             return View();
         }
+
+        // GET: Static pages
+        public ActionResult StronyStatyczne(string nazwa)
+        {
+            return View(nazwa);
+        }
     }
 }
