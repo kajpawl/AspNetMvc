@@ -4,18 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Data.Entity;
 using SklepInternetowy.Models;
+using SklepInternetowy.Migrations;
+using System.Data.Entity.Migrations;
 
 namespace SklepInternetowy.DAL
 {
-    public class KursyInitializer : DropCreateDatabaseAlways<KursyContext>
+    public class KursyInitializer : MigrateDatabaseToLatestVersion<KursyContext, Configuration>
     {
-        protected override void Seed(KursyContext context)
-        {
-            SeedKursyData(context);
-            base.Seed(context);
-        }
-
-        private void SeedKursyData(KursyContext context)
+        public static void SeedKursyData(KursyContext context)
         {
             var kategorie = new List<Kategoria>
             {
@@ -28,7 +24,7 @@ namespace SklepInternetowy.DAL
                 new Kategoria() { KategoriaId=7, NazwaKategorii="c#", NazwaPlikuIkony="c#.png", OpisKategorii="opis c#" },
             };
 
-            kategorie.ForEach(k => context.Kategorie.Add(k));
+            kategorie.ForEach(k => context.Kategorie.AddOrUpdate(k));
             context.SaveChanges();
 
             var kursy = new List<Kurs>
@@ -41,7 +37,7 @@ namespace SklepInternetowy.DAL
                 new Kurs() { AutorKursu="monika", TytulKursu="asp.net mvc", KategoriaId=1, CenaKursu=599, Bestseller=true, NazwaPlikuObrazka="asp.png", DataDodania=DateTime.Now, OpisKursu="opis kursu" },
                 new Kurs() { AutorKursu="robert", TytulKursu="asp.net mvc", KategoriaId=1, CenaKursu=699, Bestseller=true, NazwaPlikuObrazka="asp.png", DataDodania=DateTime.Now, OpisKursu="opis kursu" },
             };
-            kursy.ForEach(k => context.Kursy.Add(k));
+            kursy.ForEach(k => context.Kursy.AddOrUpdate(k));
             context.SaveChanges();
         }
     }
