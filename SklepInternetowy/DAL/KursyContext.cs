@@ -11,8 +11,8 @@ namespace SklepInternetowy.DAL
     {
         public KursyContext() : base("KursyContext")
         {
-
         }
+
         static KursyContext()
         {
             Database.SetInitializer<KursyContext>(new KursyInitializer());
