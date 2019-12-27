@@ -414,7 +414,6 @@ ul.MalaListaKategorii li {
         top: 41%;
     }
 
-
 ul.KursyTrzyKolumny {
     overflow: hidden;
     list-style-type: none;
@@ -425,6 +424,15 @@ ul.KursyTrzyKolumny {
         float: left;
         position: relative;
         /*opacity: 0.2;*/
+    }
+#KategorieListPrawaSekcja ul.KursyTrzyKolumny li {
+    width: 33.33%;
+    height: 256px;
+}
+
+    #KategorieListPrawaSekcja ul.KursyTrzyKolumny li a h1 {
+        margin-top: 50%;
+        transform: translateY(-50%);
     }
 
         ul.KursyTrzyKolumny li article {
@@ -450,7 +458,7 @@ ul.KursyTrzyKolumny {
 
         ul.KursyTrzyKolumny li a h1 {
             background-color: rgba(255, 255, 255, 0.2);
-            vertical-align: central;
+            vertical-align: middle;
             padding-top: 10px;
             padding-bottom: 10px;
             text-align: center;
@@ -530,7 +538,7 @@ ul.TrzyKolumnyList {
 
         ul.TrzyKolumnyList li a h1 {
             background-color: rgba(255, 255, 255, 0);
-            vertical-align: central;
+            vertical-align: middle;
             padding-top: 10px;
             padding-bottom: 10px;
             text-align: center;
