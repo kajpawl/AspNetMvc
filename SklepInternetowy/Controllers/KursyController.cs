@@ -16,7 +16,7 @@ namespace SklepInternetowy.Controllers
             return View();
         }
 
-        // GET: Lista kategorii
+        // GET: Lista kursów - bestsellery i nowości
         public ActionResult Lista(string nazwaKategorii)
         {
             var kategoria = db.Kategorie.Include("Kursy").Where(k => k.NazwaKategorii.ToUpper() == nazwaKategorii.ToUpper()).Single();
@@ -24,14 +24,14 @@ namespace SklepInternetowy.Controllers
             return View(kursy);
         }
 
-        // GET: Lista kursów - bestsellery i nowości
+        // GET: pojedynczy kurs
         public ActionResult Szczegoly(int id)
         {
             var kurs = db.Kursy.Find(id);
             return View(kurs);
         }
 
-        // GET: lista kursów - partial view
+        // GET: lista kategorii - partial view
         [ChildActionOnly]
         public ActionResult KategorieMenu()
         {
