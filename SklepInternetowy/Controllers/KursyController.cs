@@ -33,6 +33,7 @@ namespace SklepInternetowy.Controllers
 
         // GET: lista kategorii - partial view
         [ChildActionOnly]
+        [OutputCache(Duration = 60000)]
         public ActionResult KategorieMenu()
         {
             var kategorie = db.Kategorie.ToList();
