@@ -10,5 +10,6 @@ namespace SklepInternetowy.Infrastructure
         public const string KategorieCacheKey = "KategorieCacheKey";
         public const string NowosciCacheKey = "NowosciCacheKey";
         public const string BestselleryCacheKey = "BestselleryCacheKey";
+        public const string KoszykSessionKlucz = "KoszykSessionKlucz";
     }
 }
