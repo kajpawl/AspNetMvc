@@ -42,24 +42,22 @@
                     }
                 };
                 $input.autocomplete(options);
-            }
-
+            };
             var ajaxSubmit = function () {
                 var $form = $(this);
                 var settings = {
-                    data: this.serialize(),
-                    url: this.attr("action"),
-                    type: this.attr("method")
+                    data: $(this).serialize(),
+                    url: $(this).attr("action"),
+                    type: $(this).attr("method")
                 };
                 $.ajax(settings).done(function (result) {
                     var $targetElement = $($form.data("ajax-target"));
                     var $newContent = $(result);
-                    $targetElement.replaceWith($newContent);
+                    $($targetElement).replaceWith($newContent);
                     $newContent.effect("slide");
                 });
                 return false;
             };
-
             $("#search-filter").each(setupAutoComplete);
             $("#search-form").submit(ajaxSubmit);
         });
