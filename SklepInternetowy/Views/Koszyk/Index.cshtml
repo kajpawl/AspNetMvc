@@ -81,7 +81,7 @@
                             $("#koszyk-button-zaplac").addClass("hidden");
                             $("#CenaCalkowita").addClass("invisible");
                         }
-                        $("#calkowita-cena-wartosc").text(response.KoszykCenaCalkowita);
+                        $("#calkowita-cena-wartosc").text(response.KoszykCenaCalkowita.toFixed(2));
                         $("#koszyk-naglowek-ilosc-elementow").text(response.KoszykIloscPozycji);
                     });
                     return false;
