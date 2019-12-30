@@ -46,7 +46,7 @@
             </div>
 
             <div class="SekcjaPrzyciski">
-                <a class="PrzyciskLink" href="link">Kontynuuj zakupy</a>
+                <a class="PrzyciskLink" href="@Url.Content("~/")">Kontynuuj zakupy</a>
                 @if (Model.CenaCalkowita > 0)
                 {
                     <a class="PrzyciskLink" id="koszyk-button-zaplac" href="@Url.Action("Zaplac", "Koszyk")">Zapłać</a>
