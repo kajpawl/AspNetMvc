@@ -22,7 +22,7 @@ namespace SklepInternetowy.Controllers
             koszykManager = new KoszykManager(sessionManager, db);
         }
 
-        // GET: Koszyk
+        // widok koszyka
         public ActionResult Index()
         {
             var pozycjeKoszyka = koszykManager.PobierzKoszyk();
@@ -35,11 +35,32 @@ namespace SklepInternetowy.Controllers
             return View(koszykVM);
         }
 
-        // Dodaj do koszyka
         public ActionResult DodajDoKoszyka(int id)
         {
             koszykManager.DodajDoKoszyka(id);
             return RedirectToAction("Index");
+        }
+
+        public int PobierzIloscElementowKoszyka()
+        {
+            return koszykManager.PobierzIloscPozycjiKoszyka();
+        }
+
+
+        public ActionResult UsunZKoszyka(int kursId)
+        {
+            int iloscPozycji = koszykManager.UsunZKoszyka(kursId);
+            int iloscPozycjiKoszyka = koszykManager.PobierzIloscPozycjiKoszyka();
+            decimal wartoscKoszyka = koszykManager.PobierzWartoscKoszyka();
+
+            var wynik = new KoszykUsuwanieViewModel
+            {
+                IdPozycjiUsuwanej = kursId,
+                IloscPozycjiUsuwanej = iloscPozycji,
+                KoszykCenaCalkowita = wartoscKoszyka,
+                KoszykIloscPozycji = iloscPozycjiKoszyka
+            };
+            return Json(wynik);
         }
     }
 }
