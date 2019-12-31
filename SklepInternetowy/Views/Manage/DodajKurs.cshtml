@@ -22,6 +22,9 @@
             @Html.ValidationSummary()
         </div>
 
+        @Html.HiddenFor(o => o.Kurs.KursId)
+        @Html.HiddenFor(o => o.Kurs.DataDodania)
+        @Html.HiddenFor(o => o.Kurs.NazwaPlikuObrazka)
 
         <div style="text-align: center;">
             <table id="albumedit-address-table">

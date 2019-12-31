@@ -205,39 +205,50 @@ namespace SklepInternetowy.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult DodajKurs(EditKursViewModel model, HttpPostedFileBase file)
         {
-            if (ModelState.IsValid)
+            if (model.Kurs.KursId > 0)
             {
+                // modyfikacja kursu
+                db.Entry(model.Kurs).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("DodajKurs", new { potwierdzenie = true });
+            }
+            else
+            {
+                // dodanie nowego kursu
                 // Sprawdzenie, czy użytkownik wybral plik
                 if (file != null && file.ContentLength > 0)
                 {
-                    // Generowanie pliku
-                    var fileExt = Path.GetExtension(file.FileName);
-                    var filename = Guid.NewGuid() + fileExt;
+                    if (ModelState.IsValid)
+                    {
+                        // Generowanie pliku
+                        var fileExt = Path.GetExtension(file.FileName);
+                        var filename = Guid.NewGuid() + fileExt;
 
-                    var path = Path.Combine(Server.MapPath(AppConfig.ObrazkiFolderWzgledny), filename);
-                    file.SaveAs(path);
+                        var path = Path.Combine(Server.MapPath(AppConfig.ObrazkiFolderWzgledny), filename);
+                        file.SaveAs(path);
 
-                    model.Kurs.NazwaPlikuObrazka = filename;
-                    model.Kurs.DataDodania = DateTime.Now;
+                        model.Kurs.NazwaPlikuObrazka = filename;
+                        model.Kurs.DataDodania = DateTime.Now;
 
-                    db.Entry(model.Kurs).State = EntityState.Added;
-                    db.SaveChanges();
+                        db.Entry(model.Kurs).State = EntityState.Added;
+                        db.SaveChanges();
 
-                    return RedirectToAction("DodajKurs", new { potwierdzenie = true });
+                        return RedirectToAction("DodajKurs", new { potwierdzenie = true });
+                    }
+                    else
+                    {
+                        var kategorie = db.Kategorie.ToList();
+                        model.Kategorie = kategorie;
+                        return View(model);
+                    }
                 }
                 else
                 {
+                    ModelState.AddModelError("", "Nie wskazano pliku.");
                     var kategorie = db.Kategorie.ToList();
                     model.Kategorie = kategorie;
                     return View(model);
                 }
-            }
-            else
-            {
-                ModelState.AddModelError("", "Nie wskazano pliku.");
-                var kategorie = db.Kategorie.ToList();
-                model.Kategorie = kategorie;
-                return View(model);
             }
         }
     }
