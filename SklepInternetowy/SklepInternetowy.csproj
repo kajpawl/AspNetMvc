@@ -48,6 +48,12 @@
     <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Elmah, Version=1.2.13605.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\elmah.corelibrary.1.2\lib\Elmah.dll</HintPath>
+    </Reference>
+    <Reference Include="Elmah.Mvc, Version=2.1.2.1389, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Elmah.Mvc.2.1.2\lib\net40\Elmah.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -239,6 +245,7 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Migrations\ELMAH-1.2-db-SQLServer.sql" />
     <Content Include="Prototype\Index.html" />
     <Content Include="Prototype\Kategorie.html" />
     <Content Include="Prototype\Koszyk.html" />
@@ -299,6 +306,10 @@
     <Compile Include="Migrations\201912302350596_Zamowienia.cs" />
     <Compile Include="Migrations\201912302350596_Zamowienia.designer.cs">
       <DependentUpon>201912302350596_Zamowienia.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912311331594_Elmah.cs" />
+    <Compile Include="Migrations\201912311331594_Elmah.designer.cs">
+      <DependentUpon>201912311331594_Elmah.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DaneUzytkownika.cs" />
@@ -380,6 +391,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912302350596_Zamowienia.resx">
       <DependentUpon>201912302350596_Zamowienia.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912311331594_Elmah.resx">
+      <DependentUpon>201912311331594_Elmah.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
