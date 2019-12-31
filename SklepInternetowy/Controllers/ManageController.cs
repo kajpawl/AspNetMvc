@@ -251,5 +251,25 @@ namespace SklepInternetowy.Controllers
                 }
             }
         }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult UkryjKurs(int kursId)
+        {
+            var kurs = db.Kursy.Find(kursId);
+            kurs.Ukryty = true;
+            db.SaveChanges();
+
+            return RedirectToAction("DodajKurs", new { potwierdzenie = true });
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult PokazKurs(int kursId)
+        {
+            var kurs = db.Kursy.Find(kursId);
+            kurs.Ukryty = false;
+            db.SaveChanges();
+
+            return RedirectToAction("DodajKurs", new { potwierdzenie = true });
+        }
     }
 }
