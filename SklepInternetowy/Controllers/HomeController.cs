@@ -1,4 +1,5 @@
-﻿using SklepInternetowy.DAL;
+﻿using NLog;
+using SklepInternetowy.DAL;
 using SklepInternetowy.Infrastructure;
 using SklepInternetowy.Models;
 using SklepInternetowy.ViewModels;
@@ -12,12 +13,14 @@ namespace SklepInternetowy.Controllers
 {
     public class HomeController : Controller
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
         private KursyContext db = new KursyContext();
+        ICacheProvider cache = new DefaultCacheProvider();
 
         // GET: Home
         public ActionResult Index()
         {
-            ICacheProvider cache = new DefaultCacheProvider();
+            // logger.Info("Jesteś na stronie głównej.");
 
             List<Kategoria> kategorie;
             if (cache.IsSet(Consts.KategorieCacheKey))
