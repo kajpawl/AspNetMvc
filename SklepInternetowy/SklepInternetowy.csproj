@@ -159,9 +159,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\ajax-loader.gif" />
     <Content Include="Content\Images\ajax-loader.png" />
@@ -324,10 +322,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="packages.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -360,6 +354,8 @@
     <Content Include="Views\Koszyk\PotwierdzenieZamowienia.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Shared\_ManageLayout.cshtml" />
+    <Content Include="Views\Manage\ListaZamowien.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Enum.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

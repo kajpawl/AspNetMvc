@@ -17,9 +17,9 @@
     <mvcSiteMapNode title="Konto" controller="Manage" action="Index">
       <mvcSiteMapNode title="Rejestracja" controller="Account" action="Register" />
       <mvcSiteMapNode title="Logowanie" controller="Account" action="Login" />
-      <mvcSiteMapNode title="Edycja produktu" controller="Manage" action="AddProduct" />
+      <mvcSiteMapNode title="Edycja produktu" controller="Manage" action="DodajKurs" />
       <mvcSiteMapNode title="Twoje dane" controller="Manage" action="Index" />
-      <mvcSiteMapNode title="Zamowienie" controller="Manage" action="OrdersList" />
+      <mvcSiteMapNode title="Zamówienia" controller="Manage" action="ListaZamowien" />
     </mvcSiteMapNode>
     
   </mvcSiteMapNode>

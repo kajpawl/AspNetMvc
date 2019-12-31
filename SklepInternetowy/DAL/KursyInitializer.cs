@@ -6,6 +6,8 @@ using System.Data.Entity;
 using SklepInternetowy.Models;
 using SklepInternetowy.Migrations;
 using System.Data.Entity.Migrations;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace SklepInternetowy.DAL
 {
@@ -31,25 +33,57 @@ namespace SklepInternetowy.DAL
             {
                 new Kurs() { KursId=1, AutorKursu="Mariusz", TytulKursu="Asp.Net", KategoriaId=1, CenaKursu=0, Bestseller=true, NazwaPlikuObrazka="obrazekaspnet.png",
                 DataDodania = DateTime.Now, OpisKursu="Kurs ASP.NET - doskonała platforma do tworzenia dynamicznych aplikacji internetowych. Kurs jest przeznaczony dla wszystkich osób, które chcą nauczyć się od podstaw tworzenia stron internetowych wykorzystując technologię ASP-NET."},
-                new Kurs() { KursId=2, AutorKursu="Mariusz", TytulKursu="Asp.Net Mvc", KategoriaId=1, CenaKursu=0, Bestseller=true, NazwaPlikuObrazka="obrazekmvc.png",
+                new Kurs() { KursId=2, AutorKursu="Kajetan", TytulKursu="Asp.Net Mvc", KategoriaId=1, CenaKursu=0, Bestseller=true, NazwaPlikuObrazka="obrazekmvc.png",
                 DataDodania = DateTime.Now, OpisKursu="Kurs ASP.NET MVC - przeznaczony jest dla wszystkich osób, które chcą nauczyć się od podstaw tworzenia stron internetowych wykorzystując technologię ASP-NET MVC."},
-                new Kurs() { KursId=3, AutorKursu="Mariusz", TytulKursu="Asp.Net Mvc - Sklep Internetowy", KategoriaId=1, CenaKursu=100, Bestseller=true, NazwaPlikuObrazka="obrazekmvc2.png",
+                new Kurs() { KursId=3, AutorKursu="Tomasz", TytulKursu="Asp.Net Mvc - Sklep Internetowy", KategoriaId=1, CenaKursu=100, Bestseller=true, NazwaPlikuObrazka="obrazekmvc2.png",
                 DataDodania = DateTime.Now, OpisKursu="Kurs Asp.Net Mvc - Sklep Internetowy - to praktyczne rozwiązanie wykorzystujące technologię Asp.Net Mvc pokazujące krok po kroku budowanie serwisu internetowego sprzedającego kursy on-line"},
-                new Kurs() { KursId=4, AutorKursu="Mariusz", TytulKursu="JavaScript", KategoriaId=2, CenaKursu=70, Bestseller=false, NazwaPlikuObrazka="obrazekjavascript.png",
+                new Kurs() { KursId=4, AutorKursu="Monika", TytulKursu="JavaScript", KategoriaId=2, CenaKursu=70, Bestseller=false, NazwaPlikuObrazka="obrazekjavascript.png",
                 DataDodania = DateTime.Now, OpisKursu="Kurs JavaScript - skryptowy język programowania"},
-                new Kurs() { KursId=5, AutorKursu="Mariusz", TytulKursu="jQuery", KategoriaId=3, CenaKursu=90, Bestseller=true, NazwaPlikuObrazka="obrazekjquery.png",
+                new Kurs() { KursId=5, AutorKursu="Łukasz", TytulKursu="jQuery", KategoriaId=3, CenaKursu=90, Bestseller=true, NazwaPlikuObrazka="obrazekjquery.png",
                 DataDodania = DateTime.Now, OpisKursu="Kurs jQuery - lekka biblioteka programistyczna dla języka JavaScript"},
-                new Kurs() { KursId=6, AutorKursu="Mariusz", TytulKursu="Html5", KategoriaId=4, CenaKursu=70, Bestseller=false, NazwaPlikuObrazka="obrazekhtml.png",
+                new Kurs() { KursId=6, AutorKursu="Anna", TytulKursu="Html5", KategoriaId=4, CenaKursu=70, Bestseller=false, NazwaPlikuObrazka="obrazekhtml.png",
                 DataDodania = DateTime.Now, OpisKursu="Kurs Html5 - język wykorzystywany do tworzenia i prezentowania stron internetowych www"},
                 new Kurs() { KursId=7, AutorKursu="Mariusz", TytulKursu="Css3", KategoriaId=5, CenaKursu=70, Bestseller=false, NazwaPlikuObrazka="obrazekcss.png",
                 DataDodania = DateTime.Now, OpisKursu="Kurs Css3 - język służący do opisu formy prezentacji (wyświetlania) stron www"},
-                new Kurs() { KursId=8, AutorKursu="Mariusz", TytulKursu="Xml", KategoriaId=6, CenaKursu=60, Bestseller=false, NazwaPlikuObrazka="obrazekxml.png",
+                new Kurs() { KursId=8, AutorKursu="Tomasz", TytulKursu="Xml", KategoriaId=6, CenaKursu=60, Bestseller=false, NazwaPlikuObrazka="obrazekxml.png",
                 DataDodania = DateTime.Now, OpisKursu="Kurs Xml - uniwersalny język znaczników przeznaczony do reprezentowania różnych danych w strukturalizowany sposób"},
                 new Kurs() { KursId=9, AutorKursu="Mariusz", TytulKursu="C#", KategoriaId=7, CenaKursu=90, Bestseller=true, NazwaPlikuObrazka="obrazekcsharp.png",
                 DataDodania = DateTime.Now, OpisKursu="Kurs C# - obiektowy język programowania zaprojektowany dla platformy .Net"}
             };
             kursy.ForEach(k => context.Kursy.AddOrUpdate(k));
             context.SaveChanges();
+        }
+
+        public static void SeedUzytkownicy(KursyContext db)
+        {
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
+
+            const string name = "admin@sklepinternetowy.pl";
+            const string password = "P@ssword";
+            const string roleName = "Admin";
+
+            var user = userManager.FindByName(name);
+            if (user == null)
+            {
+                user = new ApplicationUser { UserName = name, Email = name, DaneUzytkownika = new DaneUzytkownika() };
+                var result = userManager.Create(user, password);
+            }
+
+            // utworzenie roli Admin jeśli nie istnieje
+            var role = roleManager.FindByName(roleName);
+            if (role == null)
+            {
+                role = new IdentityRole(roleName);
+                var roleResult = roleManager.Create(role);
+            }
+
+            // dodanie użytkownika do roli Admin jeśli już nie jest w roli
+            var rolesForUser = userManager.GetRoles(user.Id);
+            if (!rolesForUser.Contains(role.Name))
+            {
+                var result = userManager.AddToRole(user.Id, role.Name);
+            }
         }
     }
 }
