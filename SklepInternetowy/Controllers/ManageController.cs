@@ -3,11 +3,13 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using SklepInternetowy.App_Start;
 using SklepInternetowy.DAL;
+using SklepInternetowy.Infrastructure;
 using SklepInternetowy.Models;
 using SklepInternetowy.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -172,8 +174,71 @@ namespace SklepInternetowy.Controllers
         {
             Zamowienie zamowienieDoModyfikacji = db.Zamowienia.Find(zamowienie.ZamowienieID);
             zamowienieDoModyfikacji.StanZamowienia = zamowienie.StanZamowienia;
-            
+
             return zamowienie.StanZamowienia;
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult DodajKurs(int? kursId, bool? potwierdzenie)
+        {
+            Kurs kurs;
+            if (kursId.HasValue)
+            {
+                ViewBag.EditMode = true;
+                kurs = db.Kursy.Find(kursId);
+            }
+            else
+            {
+                ViewBag.EditMode = false;
+                kurs = new Kurs();
+            }
+
+            var result = new EditKursViewModel();
+            result.Kategorie = db.Kategorie.ToList();
+            result.Kurs = kurs;
+            result.Potwierdzenie = potwierdzenie;
+
+            return View(result);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult DodajKurs(EditKursViewModel model, HttpPostedFileBase file)
+        {
+            if (ModelState.IsValid)
+            {
+                // Sprawdzenie, czy użytkownik wybral plik
+                if (file != null && file.ContentLength > 0)
+                {
+                    // Generowanie pliku
+                    var fileExt = Path.GetExtension(file.FileName);
+                    var filename = Guid.NewGuid() + fileExt;
+
+                    var path = Path.Combine(Server.MapPath(AppConfig.ObrazkiFolderWzgledny), filename);
+                    file.SaveAs(path);
+
+                    model.Kurs.NazwaPlikuObrazka = filename;
+                    model.Kurs.DataDodania = DateTime.Now;
+
+                    db.Entry(model.Kurs).State = EntityState.Added;
+                    db.SaveChanges();
+
+                    return RedirectToAction("DodajKurs", new { potwierdzenie = true });
+                }
+                else
+                {
+                    var kategorie = db.Kategorie.ToList();
+                    model.Kategorie = kategorie;
+                    return View(model);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Nie wskazano pliku.");
+                var kategorie = db.Kategorie.ToList();
+                model.Kategorie = kategorie;
+                return View(model);
+            }
         }
     }
 }
