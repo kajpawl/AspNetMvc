@@ -15,6 +15,7 @@ namespace SklepInternetowy.Models
         public string Adres { get; set; }
 
         public string Miasto { get; set; }
+        public string KodPocztowy { get; set; }
 
         [RegularExpression(@"(\+\d{2})*[\d\s-]+", ErrorMessage = "Błędny format numeru telefonu.")]
         public string Telefon { get; set; }
