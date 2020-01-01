@@ -1,0 +1,33 @@
+﻿@model SklepInternetowy.ViewModels.PotwierdzenieZamowieniaEmail
+Content-Type: text/html; charset=utf-8
+
+<html>
+<body>
+    @Html.EmbedImage("~/Content/Images/logo.png")
+
+    <p>Dziękujemy!</p>
+    <p>Złożono zamówienie w serwisie Sklep Internetowy.</p>
+    <p>Zamówione pozycje:</p>
+    @{
+        IEnumerable<SklepInternetowy.Models.PozycjaZamowienia> pozycjeZamowienia = Model.PozycjeZamowienia;
+
+        for (int i = 0; i < pozycjeZamowienia.Count(); i++)
+        {
+            <p>
+                @pozycjeZamowienia.ElementAt(i).kurs.TytulKursu - @pozycjeZamowienia.ElementAt(i).kurs.AutorKursu
+                - @pozycjeZamowienia.ElementAt(i).kurs.CenaKursu
+            </p>
+        }
+    }
+    <p>Prosimy o przelanie kwoty @Model.Wartosc zł., tytułem zamówienia nr @Model.NumerZamowienia na nasze konto:</p>
+    <div>
+        <strong>Sklep Internetowy test</strong><br />
+        ul. Test 123<br />
+        40-000 Test<br />
+        PKO BP 00 0000 0000 0000
+    </div>
+    <p>Zaraz po otrzymaniu środków uzyskasz pełny dostęp do kursów.</p>
+    <p>Dziękujemy i zapraszamy ponownie!</p>
+    <p>Sklep Internetowy</p>
+</body>
+</html>

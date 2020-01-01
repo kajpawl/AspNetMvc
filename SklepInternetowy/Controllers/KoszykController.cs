@@ -107,6 +107,17 @@ namespace SklepInternetowy.Controllers
                 // opróżniamy nasz koszyk zakupów
                 koszykManager.PustyKoszyk();
 
+                // pobieramy informacje o realizowanym zamówieniu
+                var zamowienie = db.Zamowienia.Include("PozycjeZamowienia").Include("PozycjeZamowienia.Kurs").SingleOrDefault(o => o.ZamowienieID == newOrder.ZamowienieID);
+
+                PotwierdzenieZamowieniaEmail email = new PotwierdzenieZamowieniaEmail();
+                email.To = zamowienie.Email;
+                email.From = "kjtk@o2.pl";
+                email.Wartosc = zamowienie.WartoscZamowienia;
+                email.NumerZamowienia = zamowienie.ZamowienieID;
+                email.PozycjeZamowienia = zamowienie.PozycjeZamowienia;
+                email.Send();
+
                 return RedirectToAction("PotwierdzenieZamowienia");
             }
             else
