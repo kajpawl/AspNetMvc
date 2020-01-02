@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Hangfire;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using SklepInternetowy.App_Start;
 using SklepInternetowy.DAL;
@@ -8,6 +9,7 @@ using SklepInternetowy.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -107,21 +109,39 @@ namespace SklepInternetowy.Controllers
                 // opróżniamy nasz koszyk zakupów
                 koszykManager.PustyKoszyk();
 
-                // pobieramy informacje o realizowanym zamówieniu
-                var zamowienie = db.Zamowienia.Include("PozycjeZamowienia").Include("PozycjeZamowienia.Kurs").SingleOrDefault(o => o.ZamowienieID == newOrder.ZamowienieID);
-
-                PotwierdzenieZamowieniaEmail email = new PotwierdzenieZamowieniaEmail();
-                email.To = zamowienie.Email;
-                email.From = "kjtk@o2.pl";
-                email.Wartosc = zamowienie.WartoscZamowienia;
-                email.NumerZamowienia = zamowienie.ZamowienieID;
-                email.PozycjeZamowienia = zamowienie.PozycjeZamowienia;
-                email.Send();
+                // Hangfire: zadanie wywoływane w tle: natychmiast / z opóźnieniem / cyklicznie
+                string url = Url.Action("PotwierdzenieZamowieniaEmail", "Koszyk", new { zamowienieId = newOrder.ZamowienieID, nazwisko = newOrder.Nazwisko }, Request.Url.Scheme);
+                BackgroundJob.Enqueue(() => Call(url));
 
                 return RedirectToAction("PotwierdzenieZamowienia");
             }
             else
                 return View(zamowienieSzczegoly);
+        }
+
+        public void Call(string url)
+        {
+            var req = HttpWebRequest.Create(url);
+            req.GetResponseAsync();
+        }
+
+        public ActionResult PotwierdzenieZamowieniaEmail(int zamowienieId, string nazwisko)
+        {
+            // pobieramy informacje o realizowanym zamówieniu
+            var zamowienie = db.Zamowienia.Include("PozycjeZamowienia").Include("PozycjeZamowienia.Kurs")
+                             .SingleOrDefault(o => o.ZamowienieID == zamowienieId && o.Nazwisko == nazwisko);
+
+            if (zamowienie == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+
+            PotwierdzenieZamowieniaEmail email = new PotwierdzenieZamowieniaEmail();
+            email.To = zamowienie.Email;
+            email.From = "kjtk@o2.pl";
+            email.Wartosc = zamowienie.WartoscZamowienia;
+            email.NumerZamowienia = zamowienie.ZamowienieID;
+            email.PozycjeZamowienia = zamowienie.PozycjeZamowienia;
+            email.Send();
+
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
         public ActionResult PotwierdzenieZamowienia()

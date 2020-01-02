@@ -1,4 +1,5 @@
-﻿using Owin;
+﻿using Hangfire;
+using Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,12 @@ namespace SklepInternetowy
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+
+            //Inicjalizacja Hangfire
+            GlobalConfiguration.Configuration.UseSqlServerStorage("KursyContext");
+
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
         }
     }
 }
