@@ -11,7 +11,7 @@
     
     <mvcSiteMapNode title="Koszyk" controller="Koszyk" action="Index">
       <mvcSiteMapNode title="Dane zamowienia" controller="Koszyk" action="Zaplac" />
-      <mvcSiteMapNode title="Potwierdzenie zamowienia" controller="Koszyk" action="PotwierdzZamowienie" />
+      <mvcSiteMapNode title="Potwierdzenie zamowienia" controller="Koszyk" action="PotwierdzenieZamowienia" />
     </mvcSiteMapNode>
     
     <mvcSiteMapNode title="Konto" controller="Manage" action="Index">

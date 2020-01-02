@@ -21,9 +21,11 @@ namespace SklepInternetowy.Controllers
         private KoszykManager koszykManager;
         private ISessionManager sessionManager { get; set; }
         private KursyContext db;
+        public IMailService mailService;
 
-        public KoszykController()
+        public KoszykController(IMailService mailService)
         {
+            this.mailService = mailService;
             db = new KursyContext();
             sessionManager = new SessionManager();
             koszykManager = new KoszykManager(sessionManager, db);
@@ -109,39 +111,12 @@ namespace SklepInternetowy.Controllers
                 // opróżniamy nasz koszyk zakupów
                 koszykManager.PustyKoszyk();
 
-                // Hangfire: zadanie wywoływane w tle: natychmiast / z opóźnieniem / cyklicznie
-                string url = Url.Action("PotwierdzenieZamowieniaEmail", "Koszyk", new { zamowienieId = newOrder.ZamowienieID, nazwisko = newOrder.Nazwisko }, Request.Url.Scheme);
-                BackgroundJob.Enqueue(() => Call(url));
+                mailService.WyslaniePotwierdzenieZamowieniaEmail(newOrder);
 
                 return RedirectToAction("PotwierdzenieZamowienia");
             }
             else
                 return View(zamowienieSzczegoly);
-        }
-
-        public void Call(string url)
-        {
-            var req = HttpWebRequest.Create(url);
-            req.GetResponseAsync();
-        }
-
-        public ActionResult PotwierdzenieZamowieniaEmail(int zamowienieId, string nazwisko)
-        {
-            // pobieramy informacje o realizowanym zamówieniu
-            var zamowienie = db.Zamowienia.Include("PozycjeZamowienia").Include("PozycjeZamowienia.Kurs")
-                             .SingleOrDefault(o => o.ZamowienieID == zamowienieId && o.Nazwisko == nazwisko);
-
-            if (zamowienie == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-
-            PotwierdzenieZamowieniaEmail email = new PotwierdzenieZamowieniaEmail();
-            email.To = zamowienie.Email;
-            email.From = "kjtk@o2.pl";
-            email.Wartosc = zamowienie.WartoscZamowienia;
-            email.NumerZamowienia = zamowienie.ZamowienieID;
-            email.PozycjeZamowienia = zamowienie.PozycjeZamowienia;
-            email.Send();
-
-            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
         public ActionResult PotwierdzenieZamowienia()

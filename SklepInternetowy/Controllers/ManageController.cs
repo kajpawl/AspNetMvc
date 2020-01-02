@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -21,6 +22,12 @@ namespace SklepInternetowy.Controllers
     public class ManageController : Controller
     {
         private KursyContext db = new KursyContext();
+        private IMailService mailService;
+
+        public ManageController(IMailService mailService)
+        {
+            this.mailService = mailService;
+        }
 
         public enum ManageMessageId
         {
@@ -174,6 +181,12 @@ namespace SklepInternetowy.Controllers
         {
             Zamowienie zamowienieDoModyfikacji = db.Zamowienia.Find(zamowienie.ZamowienieID);
             zamowienieDoModyfikacji.StanZamowienia = zamowienie.StanZamowienia;
+            db.SaveChanges();
+
+            if (zamowienieDoModyfikacji.StanZamowienia == StanZamowienia.Zrealizowane)
+            {
+                mailService.WyslanieZamowienieZrealizowaneEmail(zamowienieDoModyfikacji);
+            }
 
             return zamowienie.StanZamowienia;
         }
@@ -270,6 +283,43 @@ namespace SklepInternetowy.Controllers
             db.SaveChanges();
 
             return RedirectToAction("DodajKurs", new { potwierdzenie = true });
+        }
+
+        [AllowAnonymous]
+        public ActionResult WyslaniePotwierdzenieZamowieniaEmail(int zamowienieId, string nazwisko)
+        {
+            var zamowienie = db.Zamowienia.Include("PozycjeZamowienia").Include("PozycjeZamowienia.Kurs")
+                             .SingleOrDefault(o => o.ZamowienieID == zamowienieId && o.Nazwisko == nazwisko);
+
+            if (zamowienie == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+
+            PotwierdzenieZamowieniaEmail email = new PotwierdzenieZamowieniaEmail();
+            email.To = zamowienie.Email;
+            email.From = "kjtk@o2.pl";
+            email.Wartosc = zamowienie.WartoscZamowienia;
+            email.NumerZamowienia = zamowienie.ZamowienieID;
+            email.PozycjeZamowienia = zamowienie.PozycjeZamowienia;
+            email.SciezkaObrazka = AppConfig.ObrazkiFolderWzgledny;
+            email.Send();
+
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
+
+        [AllowAnonymous]
+        public ActionResult WyslanieZamowienieZrealizowaneEmail(int zamowienieId, string nazwisko)
+        {
+            var zamowienie = db.Zamowienia.Include("PozycjeZamowienia").Include("PozycjeZamowienia.Kurs")
+                             .SingleOrDefault(o => o.ZamowienieID == zamowienieId && o.Nazwisko == nazwisko);
+
+            if (zamowienie == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+
+            ZamowienieZrealizowaneEmail email = new ZamowienieZrealizowaneEmail();
+            email.To = zamowienie.Email;
+            email.From = "kjtk@o2.pl";
+            email.NumerZamowienia = zamowienie.ZamowienieID;
+            email.Send();
+
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }
 }
